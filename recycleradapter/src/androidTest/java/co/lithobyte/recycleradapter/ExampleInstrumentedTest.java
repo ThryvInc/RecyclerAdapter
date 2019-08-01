@@ -1,4 +1,4 @@
-package co.lithobyte.recyclerview;
+package co.lithobyte.recycleradapter;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;
