@@ -1,9 +1,9 @@
-package co.lithobyte.recycleradapter
-
+package co.lithobyte.recycleradapter.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import co.lithobyte.recycleradapter.models.OnBoundProvider
 
 
 interface RecyclerItemViewModelInterface {
@@ -12,7 +12,8 @@ interface RecyclerItemViewModelInterface {
     fun viewType(): Int
 }
 
-abstract class RecyclerItemViewModel<T>(val model: T): RecyclerItemViewModelInterface
+abstract class RecyclerItemViewModel<T>(val model: T):
+    RecyclerItemViewModelInterface
 
 abstract class ModelViewHolder<T>(itemView: View): RecyclerView.ViewHolder(itemView) {
     abstract fun configure(model: T)
@@ -47,4 +48,25 @@ open class FlexAdapter (var itemViewModels: List<RecyclerItemViewModelInterface>
         val itemViewModel = itemViewModels[position]
         itemViewModel.configureHolder(holder)
     }
+}
+
+abstract class OnBoundAdapter(itemViewModels: List<RecyclerItemViewModelInterface>): FlexAdapter(itemViewModels),
+    OnBoundProvider
+
+open class OnBoundModelRecyclerViewAdapter(itemViewModels: List<RecyclerItemViewModelInterface>): OnBoundAdapter(itemViewModels) {
+    var _onBound: ((Int, Int) -> Unit)? = null
+    override var onBound: ((Int, Int) -> Unit)?
+        get() = _onBound
+        set(value) {
+            _onBound = value
+        }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        val onBound = _onBound
+        if (onBound != null) {
+            onBound(position, itemViewModels.size)
+        }
+    }
+
 }
