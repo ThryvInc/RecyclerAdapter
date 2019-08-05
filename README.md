@@ -13,4 +13,5 @@ Step 2. Add the dependency
 
 	dependencies {
 	        implementation 'com.github.ThryvInc:RecyclerAdapter:0.1.1'
+		...
 	}
